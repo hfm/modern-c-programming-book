@@ -7,13 +7,15 @@ extern "C" {
 #endif
 
 typedef struct {
+  const int min;
+  const int max;
+} Range;
+
+typedef struct {
   int top;
   const size_t size;
   int * const pBuf;
-
-  const bool needRangeCheck;
-  const int min;
-  const int max;
+  const Range * const pRange;
 } Stack;
 
 bool push(Stack *p, int val);
@@ -21,12 +23,13 @@ bool pop(Stack *p, int *pRet);
 
 #define newStack(buf) {                \
   0, sizeof(buf) / sizeof(int), (buf), \
-  false, 0, 0                          \
+  NULL                                 \
 }
 
-#define newStackWithRangeCheck(buf, min, max) { \
-  0, sizeof(buf) / sizeof(int), (buf),          \
-  true, min, max                                \
+#define newStackWithRangeCheck(buf, pRange) { \
+  0, sizeof(buf) / sizeof(int), (buf),        \
+  pRange                                      \
+}
 
 #ifdef __cplusplus
 }

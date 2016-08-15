@@ -9,13 +9,13 @@ static bool isStackEmpty(const Stack *p) {
     return p->top == 0;
 }
 
-static bool isRangeOk(const Stack *p, int val) {
-    return ! p->needRangeCheck ||
+static bool isRangeOk(const Range *p, int val) {
+    return p == NULL ||
         (p->min <= val && val <= p->max);
 }
 
 bool push(Stack *p, int val) {
-    if (! isRangeOk(p, val) || isStackFull(p)) return false;
+    if (! isRangeOk(p->pRange, val) || isStackFull(p)) return false;
     p->pBuf[p->top++] = val;
     return true;
 }
