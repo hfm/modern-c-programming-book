@@ -9,15 +9,15 @@ static bool isStackEmpty(const Stack *p) {
     return p->top == 0;
 }
 
-bool validateRange(Validator *pThis, int val) {
-    Range *pRange = (Range *)(pThis->pData);
-    return pRange->min <= val && val <= pRange->max;
+bool validateRange(Validator *p, int val) {
+    RangeValidator *pThis = (RangeValidator *)p;
+    return pThis->min <= val && val <= pThis->max;
 }
 
-bool validatePrevious(Validator *pThis, int val) {
-    PreviousValue *pPrevious = (PreviousValue *)(pThis->pData);
-    if (val < pPrevious->previousValue) return false;
-    pPrevious->previousValue = val;
+bool validatePrevious(Validator *p, int val) {
+    PreviousValueValidator *pThis = (PreviousValueValidator *)p;
+    if (val < pThis->previousValue) return false;
+    pThis->previousValue = val;
     return true;
 }
 
@@ -44,14 +44,12 @@ int main(int argc, char const* argv[])
     Stack stack = newStack(buf);
     push(&stack, 123);
 
-    Range range = {0, 9};
-    Validator validator = rangeValidator(&range);
-    Stack stack2 = newStackWithValidator(buf, &validator);
+    RangeValidator validator = newRangeValidator(0, 9);
+    Stack stack2 = newStackWithValidator(buf, &validator.base);
     push(&stack2, 123);
 
-    PreviousValue previous = {0};
-    Validator validator2 = previousValidator(&previous);
-    Stack stack3 = newStackWithValidator(buf, &validator2);
+    PreviousValueValidator validator2 = newPreviousValidator;
+    Stack stack3 = newStackWithValidator(buf, &validator2.base);
     push(&stack3, 123);
     return 0;
 }

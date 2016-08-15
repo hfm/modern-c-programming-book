@@ -8,17 +8,18 @@ extern "C" {
 
 typedef struct Validator {
   bool (* const validate)(struct Validator *pThis, int val);
-  void * const pData;
 } Validator;
 
 typedef struct {
+  Validator base;
   const int min;
   const int max;
-} Range;
+} RangeValidator;
 
 typedef struct {
+  Validator base;
   int previousValue;
-} PreviousValue;
+} PreviousValueValidator;
 
 typedef struct {
   int top;
@@ -26,6 +27,15 @@ typedef struct {
   int * const pBuf;
   Validator * const pValidator;
 } Stack;
+
+bool validateRange(Validator *pThis, int val);
+bool validatePrevious(Validator *pThis, int val);
+
+#define newRangeValidator(min, max) \
+    {{validateRange}, (min), (max)}
+
+#define newPreviousValidator \
+    {{validatePrevious}, 0}
 
 bool rangeValidator(Validator *pThis, int val);
 bool previousValidator(Validator *pThis, int val);
