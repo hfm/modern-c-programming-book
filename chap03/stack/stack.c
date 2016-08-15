@@ -43,5 +43,15 @@ int main(int argc, char const* argv[])
     int buf[16];
     Stack stack = newStack(buf);
     push(&stack, 123);
+
+    Range range = {0, 9};
+    Validator validator = rangeValidator(&range);
+    Stack stack2 = newStackWithValidator(buf, &validator);
+    push(&stack2, 123);
+
+    PreviousValue previous = {0};
+    Validator validator2 = previousValidator(&previous);
+    Stack stack3 = newStackWithValidator(buf, &validator2);
+    push(&stack3, 123);
     return 0;
 }
