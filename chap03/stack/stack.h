@@ -6,17 +6,29 @@
 extern "C" {
 #endif
 
+typedef struct Validator {
+  bool (* const validate)(struct Validator *pThis, int val);
+  void * const pData;
+} Validator;
+
 typedef struct {
   const int min;
   const int max;
 } Range;
 
 typedef struct {
+  int previousValue;
+} PreviousValue;
+
+typedef struct {
   int top;
   const size_t size;
   int * const pBuf;
-  const Range * const pRange;
+  Validator * const pValidator;
 } Stack;
+
+bool rangeValidator(Validator *pThis, int val);
+bool previousValidator(Validator *pThis, int val);
 
 bool push(Stack *p, int val);
 bool pop(Stack *p, int *pRet);
@@ -26,9 +38,19 @@ bool pop(Stack *p, int *pRet);
   NULL                                 \
 }
 
-#define newStackWithRangeCheck(buf, pRange) { \
-  0, sizeof(buf) / sizeof(int), (buf),        \
-  pRange                                      \
+#define rangeValidator(pRange) { \
+  validateRange,                 \
+  pRange                         \
+}
+
+#define previousValidator(pPrevious) { \
+  validatePrevious,                    \
+  pPrevious                            \
+}
+
+#define newStackWithValidator(buf, pValidator) { \
+  0, sizeof(buf) / sizeof(int), (buf),           \
+  pValidator                                     \
 }
 
 #ifdef __cplusplus
