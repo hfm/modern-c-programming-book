@@ -1,14 +1,14 @@
 #include <stdbool.h>
 #include "stack.h"
 
-int buf[16];
-int top = 0;
+static int buf[16];
+static int top = 0;
 
-bool isStackFull(void) {
+static bool isStackFull(void) {
     return top == sizeof(buf) / sizeof(int);
 }
 
-bool isStackEmpty(void) {
+static bool isStackEmpty(void) {
     return top == 0;
 }
 
